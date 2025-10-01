@@ -1,8 +1,3 @@
-// ============================================
-// CHECKOUT SCREEN
-// Location: lib/screens/checkout_screen.dart
-// ============================================
-
 import 'package:flutter/material.dart';
 import 'package:pharmacy_application/screens/payment_methods_screen.dart';
 import '../models/cart_item.dart';
