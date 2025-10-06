@@ -1,8 +1,3 @@
-// ============================================
-// PRESCRIPTION UPLOAD SCREEN
-// Location: lib/screens/prescription_upload_screen.dart
-// ============================================
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -97,11 +92,14 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.file(
-                    _selectedImage!,
-                    fit: BoxFit.cover,
+                child: const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image, size: 64, color: Colors.grey),
+                      SizedBox(height: 8),
+                      Text('Image selected'),
+                    ],
                   ),
                 ),
               ),

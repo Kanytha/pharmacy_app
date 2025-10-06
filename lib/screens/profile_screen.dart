@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'address_management_screen.dart';
+import 'developers_screen.dart';
 import 'payment_methods_screen.dart';
 import '../services/api_service.dart';
 
@@ -230,6 +231,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Contact support to change password')),
+                );
+              },
+            ),
+
+            _buildMenuOption(
+              icon: Icons.info_outline,
+              title: 'About Us',
+              subtitle: 'Meet the team',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TeamScreen(),
+                  ),
                 );
               },
             ),

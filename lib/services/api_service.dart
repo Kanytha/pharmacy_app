@@ -3,18 +3,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // ⚠️ CHANGE THIS WHEN TESTING ON REAL PHONE ⚠️
-  // For Android Emulator: use "10.0.2.2"
-  // For Real Phone: use your computer's IP (e.g., "192.168.1.100")
-  // static const String baseUrl = "http://172.21.0.181/pharmacy_backend/api";
-  static const String baseUrl = "http://localhost/pharmacy_backend/api";
+  // static const String baseUrl = "http://172.21.0.138/pharmacy_backend/api";
+  // static const String baseUrl = "http://localhost/pharmacy_backend/api";
+  static const String baseUrl = "http://10.0.2.2/pharmacy_backend/api";  // testing on mobile phone
 
-  // When testing on real phone, change to:
-  // static const String baseUrl = "http://192.168.1.100/pharmacy_backend/api";
 
-  // ============================================
   // AUTHENTICATION APIs
-  // ============================================
 
   /// Register new user
   static Future<Map<String, dynamic>> register({
@@ -110,9 +104,7 @@ class ApiService {
     }
   }
 
-  // ============================================
   // PRODUCTS APIs
-  // ============================================
 
   /// Get all products with optional filters
   static Future<Map<String, dynamic>> getProducts({
@@ -184,9 +176,7 @@ class ApiService {
     }
   }
 
-  // ============================================
   // CART APIs
-  // ============================================
 
   /// Add item to cart
   static Future<Map<String, dynamic>> addToCart({
@@ -272,9 +262,7 @@ class ApiService {
     }
   }
 
-// ============================================
 // ORDERS APIs
-// ============================================
 
   /// Create new order
   static Future<Map<String, dynamic>> createOrder({

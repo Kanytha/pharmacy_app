@@ -149,6 +149,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ? _buildEmptySection(
               'No addresses found',
               'Add an address in your profile',
+                  () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddressManagementScreen(userId: widget.userId),
+                  ),
+                );
+                _loadData();
+              },
+              'Add Address',
             )
                 : _buildAddressSelector(),
 
@@ -160,6 +170,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ? _buildEmptySection(
               'No payment methods found',
               'Add a payment method in your profile',
+                  () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PaymentMethodsScreen(userId: widget.userId),
+                  ),
+                );
+                _loadData();
+              },
+              'Add Payment Method',
             )
                 : _buildPaymentSelector(),
 
@@ -190,7 +210,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _buildEmptySection(String title, String subtitle) {
+  Widget _buildEmptySection(String title, String subtitle, VoidCallback onAdd, String buttonText) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -198,14 +218,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              Text(subtitle, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                onPressed: onAdd,
+                icon: const Icon(Icons.add),
+                label: Text(buttonText),
               ),
             ],
           ),
@@ -225,16 +245,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 const Text('No addresses found'),
                 const SizedBox(height: 8),
+                const Text(
+                  'Add an address in your profile',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 12),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    // Navigate to add address
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AddressManagementScreen(userId: widget.userId),
                       ),
                     );
-                    _loadData(); // Reload after returning
+                    _loadData();
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Add Address'),
@@ -326,6 +350,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 const Text('No payment methods found'),
                 const SizedBox(height: 8),
+                const Text(
+                  'Add a payment method in your profile',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 12),
                 ElevatedButton.icon(
                   onPressed: () async {
                     await Navigator.push(
