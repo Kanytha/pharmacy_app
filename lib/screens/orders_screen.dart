@@ -1,8 +1,3 @@
-// ============================================
-// ORDERS SCREEN (Order History / My Orders)
-// Location: lib/screens/orders_screen.dart
-// ============================================
-
 import 'package:flutter/material.dart';
 import '../models/order.dart';
 import '../services/api_service.dart';

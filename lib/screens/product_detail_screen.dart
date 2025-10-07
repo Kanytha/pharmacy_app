@@ -134,7 +134,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ? ClipRect(
                 child: Image.network(
                   // 'http://localhost/pharmacy_backend/${_product!.imageUrl}',
-                  'http://172.21.3.209/pharmacy_backend/${_product!.imageUrl}',    // change the ip here
+                  'http://172.21.1.175/pharmacy_backend/${_product!.imageUrl}',    // change the ip here
                   width: double.infinity,
                   height: 300,
                   fit: BoxFit.contain,

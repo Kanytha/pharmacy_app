@@ -31,6 +31,10 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
               .map((json) => PaymentMethod.fromJson(json))
               .toList();
         });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'] ?? 'Failed to load methods')),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -75,14 +79,17 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                 TextField(
                   controller: cardBrandController,
                   decoration: const InputDecoration(
-                      labelText: 'Card Brand (e.g., Visa, Mastercard)'),
+                    labelText: 'Card Brand (e.g., Visa, Mastercard)',
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: cardNumberController,
                   decoration: const InputDecoration(
-                      labelText: 'Last 4 Digits',
-                      hintText: '1234'),
+                    labelText: 'Last 4 Digits',
+                    hintText: '1234',
+                    counterText: "",
+                  ),
                   maxLength: 4,
                   keyboardType: TextInputType.number,
                 ),
@@ -93,7 +100,10 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       child: TextField(
                         controller: monthController,
                         decoration: const InputDecoration(
-                            labelText: 'Month', hintText: '12'),
+                          labelText: 'Month',
+                          hintText: '12',
+                          counterText: "",
+                        ),
                         keyboardType: TextInputType.number,
                         maxLength: 2,
                       ),
@@ -103,7 +113,10 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       child: TextField(
                         controller: yearController,
                         decoration: const InputDecoration(
-                            labelText: 'Year', hintText: '2025'),
+                          labelText: 'Year',
+                          hintText: '2025',
+                          counterText: "",
+                        ),
                         keyboardType: TextInputType.number,
                         maxLength: 4,
                       ),
@@ -112,10 +125,11 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                 ),
                 const SizedBox(height: 8),
                 CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
                   title: const Text('Set as default'),
                   value: isDefault,
                   onChanged: (value) {
-                    setDialogState(() => isDefault = value!);
+                    setDialogState(() => isDefault = value ?? false);
                   },
                 ),
               ],
@@ -138,25 +152,31 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   return;
                 }
 
-                final response = await ApiService.addPaymentMethod(
-                  userId: widget.userId,
-                  paymentType: paymentType,
-                  cardLastFour: cardNumberController.text.trim(),
-                  cardBrand: cardBrandController.text.trim(),
-                  expiryMonth: int.parse(monthController.text.trim()),
-                  expiryYear: int.parse(yearController.text.trim()),
-                  isDefault: isDefault,
-                );
-
-                if (response['success']) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Payment method added!')),
+                try {
+                  final response = await ApiService.addPaymentMethod(
+                    userId: widget.userId,
+                    paymentType: paymentType,
+                    cardLastFour: cardNumberController.text.trim(),
+                    cardBrand: cardBrandController.text.trim(),
+                    expiryMonth: int.parse(monthController.text.trim()),
+                    expiryYear: int.parse(yearController.text.trim()),
+                    isDefault: isDefault,
                   );
-                  _loadMethods();
-                } else {
+
+                  if (response['success']) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Payment method added!')),
+                    );
+                    _loadMethods();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(response['message'] ?? 'Failed')),
+                    );
+                  }
+                } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(response['message'] ?? 'Failed')),
+                    SnackBar(content: Text('Error: $e')),
                   );
                 }
               },
@@ -169,15 +189,21 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   }
 
   Future<void> _deletePayment(int paymentMethodId) async {
-    final response = await ApiService.deletePaymentMethod(paymentMethodId);
-    if (response['success']) {
+    try {
+      final response = await ApiService.deletePaymentMethod(paymentMethodId);
+      if (response['success']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Payment method deleted')),
+        );
+        _loadMethods();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'] ?? 'Failed')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Payment method deleted')),
-      );
-      _loadMethods();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response['message'] ?? 'Failed')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
@@ -210,31 +236,37 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
         itemBuilder: (context, index) {
           final method = _methods[index];
           return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: ListTile(
-              leading: const Icon(Icons.credit_card),
+              leading: const Icon(Icons.credit_card, color: Colors.teal),
               title: Row(
                 children: [
-                  Text(method.displayName),
-                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      method.displayName,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
                   if (method.isDefault)
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
                         'DEFAULT',
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 10),
+                        style: TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ),
                 ],
               ),
               subtitle: method.paymentType != 'insurance'
-                  ? Text(
-                  'Expires ${method.expiryMonth}/${method.expiryYear}')
+                  ? Text('Expires ${method.expiryMonth}/${method.expiryYear}')
                   : null,
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
@@ -243,7 +275,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text('Delete Payment Method'),
-                      content: const Text('Are you sure?'),
+                      content: const Text('Are you sure you want to delete this method?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),

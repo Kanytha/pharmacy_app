@@ -182,7 +182,7 @@ class _CartScreenState extends State<CartScreen> {
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
                   // 'http://localhost/pharmacy_backend/${item.imageUrl}',
-                  'http://172.21.3.209/pharmacy_backend/${item.imageUrl}',    // change ip here
+                  'http://172.21.1.175/pharmacy_backend/${item.imageUrl}',    // change ip here
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,

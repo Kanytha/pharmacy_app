@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildProductCard(Product product) {
     final imageUrl = product.imageUrl != null
         // ? 'http://localhost/pharmacy_backend/${product.imageUrl}'
-        ? 'http://172.21.3.209/pharmacy_backend/${product.imageUrl}'
+        ? 'http://172.21.1.175/pharmacy_backend/${product.imageUrl}'
         : null;
 
 
