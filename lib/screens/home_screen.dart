@@ -1,8 +1,3 @@
-// ============================================
-// HOME SCREEN (Main Screen)
-// Location: lib/screens/home_screen.dart
-// ============================================
-
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../models/product.dart';
@@ -16,8 +11,13 @@ import 'prescription_upload_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
+  final int initialTabIndex;
 
-  const HomeScreen({Key? key, required this.user}) : super(key: key);
+  const HomeScreen({
+    Key? key,
+    required this.user,
+    this.initialTabIndex = 0,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.initialTabIndex;
     _loadData();
   }
 
@@ -204,6 +205,15 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildProductCard(Product product) {
+    final imageUrl = product.imageUrl != null
+        // ? 'http://localhost/pharmacy_backend/${product.imageUrl}'
+        ? 'http://172.21.3.209/pharmacy_backend/${product.imageUrl}'
+        : null;
+
+
+    print('Product: ${product.productName}');
+    print('Image URL: $imageUrl');
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -222,54 +232,46 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product Image
+            // Product Image
             Container(
               height: 120,
+              width: double.infinity,
               color: Colors.grey[200],
-              child: Center(
-                child: product.imageUrl != null
-                    ? Image.network(
-                  'http://10.0.2.2/pharmacy_backend/${product.imageUrl}',
+              child: imageUrl != null
+                  ? ClipRect(
+                child: Image.network(
+                  imageUrl,
+                  width: double.infinity,
+                  height: 120,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.medical_services, size: 48);
+                    return Container(
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: Icon(Icons.medical_services, size: 48),
+                      ),
+                    );
                   },
-                )
-                    : const Icon(Icons.medical_services, size: 48),
+                ),
+              )
+                  : const Center(
+                child: Icon(Icons.medical_services, size: 48),
               ),
             ),
 
+            // Rest of card...
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product Name
                   Text(
                     product.productName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-
-                  // Manufacturer
-                  if (product.manufacturer != null)
-                    Text(
-                      product.manufacturer!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                  const SizedBox(height: 4),
-
-                  // Price
                   Text(
                     '\$${product.price.toStringAsFixed(2)}',
                     style: TextStyle(
@@ -278,28 +280,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-
-                  // Prescription Required Badge
-                  if (product.requiresPrescription)
-                    Container(
-                      margin: const EdgeInsets.only(top: 4),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange[100],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        'Rx Required',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

@@ -1,8 +1,3 @@
-// ============================================
-// PRODUCT DETAIL SCREEN
-// Location: lib/screens/product_detail_screen.dart
-// ============================================
-
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/api_service.dart';
@@ -136,17 +131,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               color: Colors.grey[200],
               child: _product!.imageUrl != null
-                  ? Image.network(
-                'http://10.0.2.2/pharmacy_backend/${_product!.imageUrl}',
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
-                    Icons.medical_services,
-                    size: 100,
-                  );
-                },
+                  ? ClipRect(
+                child: Image.network(
+                  // 'http://localhost/pharmacy_backend/${_product!.imageUrl}',
+                  'http://172.21.3.209/pharmacy_backend/${_product!.imageUrl}',    // change the ip here
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Icon(Icons.medical_services, size: 100),
+                    );
+                  },
+                ),
               )
-                  : const Icon(Icons.medical_services, size: 100),
+                  : const Center(child: Icon(Icons.medical_services, size: 100)),
             ),
 
             Padding(

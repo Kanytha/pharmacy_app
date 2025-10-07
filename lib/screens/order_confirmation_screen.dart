@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/user.dart';
+import '../services/api_service.dart';
+import 'home_screen.dart';
+
 class OrderConfirmationScreen extends StatelessWidget {
   final String orderNumber;
   final int orderId;
@@ -73,12 +77,24 @@ class OrderConfirmationScreen extends StatelessWidget {
               const SizedBox(height: 48),
 
               // View Order Details Button
+              // Continue Shopping Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Pop all screens until we reach the home screen
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  onPressed: () async {
+                    // Get user data and navigate to home (shopping tab)
+                    final userResponse = await ApiService.getProfile(userId);
+                    if (userResponse['success']) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                            user: User.fromJson(userResponse['data']),
+                            initialTabIndex: 0, // Home/Shopping tab
+                          ),
+                        ),
+                            (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -95,13 +111,24 @@ class OrderConfirmationScreen extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Track Order Button
+// View My Orders Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
-                    // Pop all screens until we reach the home screen
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  onPressed: () async {
+                    // Get user data and navigate to Orders tab
+                    final userResponse = await ApiService.getProfile(userId);
+                    if (userResponse['success']) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                            user: User.fromJson(userResponse['data']),
+                            initialTabIndex: 1, // Orders tab
+                          ),
+                        ),
+                            (route) => false,
+                      );
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

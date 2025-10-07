@@ -181,14 +181,19 @@ class _CartScreenState extends State<CartScreen> {
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  'http://10.0.2.2/pharmacy_backend/${item.imageUrl}',
+                  // 'http://localhost/pharmacy_backend/${item.imageUrl}',
+                  'http://172.21.3.209/pharmacy_backend/${item.imageUrl}',    // change ip here
+                  width: 80,
+                  height: 80,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.medical_services, size: 40);
+                    return const Center(
+                      child: Icon(Icons.medical_services, size: 40),
+                    );
                   },
                 ),
               )
-                  : const Icon(Icons.medical_services, size: 40),
+                  : const Center(child: Icon(Icons.medical_services, size: 40)),
             ),
 
             const SizedBox(width: 12),

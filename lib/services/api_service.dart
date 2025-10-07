@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  // static const String baseUrl = "http://172.21.0.138/pharmacy_backend/api";
+  // static const String baseUrl = "http://172.21.3.209/pharmacy_backend/api";
   // static const String baseUrl = "http://localhost/pharmacy_backend/api";
   static const String baseUrl = "http://10.0.2.2/pharmacy_backend/api";  // testing on mobile phone
 
+  static String getImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) return '';
+    return '$baseUrl/$imagePath';
+  }
 
   // AUTHENTICATION APIs
 
